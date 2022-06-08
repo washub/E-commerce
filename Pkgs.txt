@@ -1,0 +1,50 @@
+1 - to use DbContext first add nuget pkg.
+    - Microsoft.EntityFrameworkCore
+2 - to use Database for eg sqlite use below pkg
+    - Microsoft.EntityFrameworkCore.Sqlite
+
+
+**select the version same to your project version for eg. in this case we are using .Net core 3.1
+
+To add migration and update database/scaffold we need:
+ - Microsoft.EntityFrameworkCore.Tools 
+ - Microsoft.EntityFrameworkCore.Design
+
+
+ Plan-----------------
+ 1 - Create API project that will deal with HTTP requests.
+ 2 - Create Core project that will handle the business logic e.g. entities etc.
+ 3 - Create Infrastructure project that will deal with DataAccesss and all.
+        **cmd for cl => dotnet new classlib -o <ProjectName>
+
+                                             E-commerce
+                                                |
+                    API(Webapi)<SL>------------Core(CL)-----------Infrastructure(CL)<DAL> 
+
+4 - Add them to sln => dotnet sln add [Projname]/
+5 - Make sure to match targetRefrence version for core3.1 for all projects and run restore command
+        ** goto each project folder -> dotnet restore
+5 - Add refrences of projects => API refrences Infrastructure and Infrastructure refrences Core and
+    restore the projects
+        ** goto project folder and run -> dotnet add reference <ProjectName>
+        ** goto each project folder -> dotnet restores
+
+6-> since we have first created API then project so we need to make adjustment in project files.
+    A - Move Data(including migrations files) folder to Infrastructure since it will deal with database
+        activities.
+    B - Move Entity folder to Core project since it will deal with models and business logic.
+    C - Once done please update namespace and using statments since things are reallocated.
+    D - We need to Microsoft.EntityFrameworkCore && Microsoft.EntityFrameworkCore.Sqlite from API csproj 
+        to Infrastructure.csproj
+    E - We will keep Microsoft.EntityFrameworkCore.Tools and Design in API.csproj since it is startup
+    F - Finally Run -> dontet build to build the project if found error please recheck and rebuild. 
+7 - Okay so now everything is good lets do version contro using git.
+    A - goto root dir and check > git status (if error then we need to init a plain repo)
+    B - > git init (it will make the root folder a master)
+    C - the above operation will stage all files but we don't want all files instead we 
+        want only those to be tracked which we changed so we gonna ignor some files
+        so come to root folder and make file <.gitignore> and add below filename in it:
+            obj
+            bin
+            appsettings.json
+            *.db
