@@ -48,3 +48,62 @@ To add migration and update database/scaffold we need:
             bin
             appsettings.json
             *.db
+    D - So now we need to track & commit all files currently untracked.
+            >git add . (. represent current dir's all files)
+            >git commit -m ["messages"] --> it will commit to our source control
+    E - Now we want to push committed files to remote repository that will make our 
+        accessible
+            A - now goto browser git page and create new repository and run below cmds
+                    > git remote add origin <url> 
+                    > git push -u origin master
+
+--------------------------------
+# Extending the Features
+
+1 - repository model -> lets abstract our data access layer from the controller and we can do that:
+        A - Making a repository which have DataAccesss reference and then we can inject repository
+            inside our controller.
+            a - To do this we shall Create an interface and implement this is a class later add the
+                service to startup file.
+                    create IProductRepository inside Core.Entities and implement this inside Infrastructure.Data directory.
+
+                    Task<Product> GetProductByIdAsync(int id);
+                    Task<IReadOnlyList<Product>> GetProductsAsync();
+
+                    Once done goto startup and add the service.
+
+                        services.AddScoped<IProductRepository, ProductRepository>();
+
+        B - Now time to inject in controller so goto ProductsController and inject it.
+2 - Adding fields ->Lets add some more field to Product entity [Description, PicUrl, Price,
+                    ProductType<FK>, ProductBrand<FK>, FKsID]
+
+3 - Migration -> First need to drop db and add migration since fields are altered.
+                    * DataContext is in other proj and startup in other proj so we need to 
+                      change the EntityFrameworkCore command a little.
+                A- first drop the database.
+                    > dotnet ef database drop -p <projectname_migration> -s <startup_proj>
+                B - remove migration
+                    > dotnet ef migrations remove -p <projectname_migration> -s <startup_proj>
+                C - add migrations
+                    > dotnet ef migrations add <migrationName>-p <projectname_migration> -s 
+                      <startup_proj> -o <where to create>
+
+4 - Constraints ->  We may want to add specific condtion to our entities so we can apply some rule.
+                    We don't want to do directly on our context class instead we will make config file
+                    to apply the rules on entities.
+                        **  Create Infrastructure
+                                        |_Data
+                                            |_config--> ProductConfiguration.cs
+
+                    this class shall inherit -> IEntityTypeConfiguration<className>
+                    Now we will implement configure() where we can add rules.
+
+                            Property(p=> p.Name).IsRequired().HasMaxLength(100);
+                            Property(p => p.Description).IsRequired().HasMaxLength(200);
+                            Property(p=> p.Price).HasColumnType("decimal(18,2)");
+                            Property(p=> p.PictureUrl).IsRequired();
+                            HasOne(b => b.ProductBrand).WithMany().HasForeignKey(p => p.ProductBrandId);
+                            HasOne(b => b.ProductType).WithMany().HasForeignKey(p => p.ProductTypeId);
+
+                    Now goto contextClass and override OnModelCreating()

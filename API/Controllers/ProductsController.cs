@@ -13,25 +13,38 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class ProductsController : Controller
     {
-        private readonly StoreContext _context;
+        private readonly IProductRepository _repo;
 
-        public ProductsController(StoreContext context)
-        {
-            _context = context;
-            
+        public ProductsController(IProductRepository repo){
+            _repo = repo;
+
         }
+           
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts(){
-            var prod =  await _context.Products.ToListAsync();
+            var prod =  await _repo.GetProductsListAsync();
             return Ok(prod);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id){
-            var prod = await _context.Products.Where(p=> p.Id==id).FirstOrDefaultAsync();
+            var prod = await _repo.GetProductByIdAsync(id);
             if(prod == null){
                 return NotFound(new Product{Name="No data found"});
             }
             return Ok(prod);
+        }
+
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands(){
+            var brands = await _repo.GetProductBrandsAsync();
+            return Ok(brands);
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyList<ProductType>>> GetTypes(){
+            var types = await _repo.GetProductTypesAsync();
+            return Ok(types);
         }
     }
 }
