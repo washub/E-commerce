@@ -22,6 +22,7 @@ namespace Infrastructure.Data
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
+            // throw new Exception();
             return await _context.Products.Include(p=> p.ProductBrand).Include(p=>p.ProductType).FirstOrDefaultAsync(r => r.Id==id);
         }
 
