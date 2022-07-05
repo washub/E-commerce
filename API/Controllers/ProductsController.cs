@@ -70,15 +70,24 @@ namespace API.Controllers
             _prodCont = prodCont;
             
         }
-            [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(){
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+        [HttpGet]
+        public async Task<ActionResult<Pagination<ProductDto>>> GetProducts([FromQuery]ProductSpecParams productParams){
+
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+
+            var countSpec = new ProductWithFilterForCountSpecification(productParams);
+
+            var totalCount = await _prodCont.CountAsync(countSpec);
+
             var prod =  await _prodCont.ListAsync(spec);
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(prod));
+
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(prod);
+
+            return Ok(new Pagination<ProductDto>(productParams.PageIndex, productParams.PageSize, totalCount, data));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id){
+        public async Task<ActionResult<ProductDto>> GetProduct(int id){
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var prod = await _prodCont.GetEntityWithSpec(spec);
             if(prod == null){

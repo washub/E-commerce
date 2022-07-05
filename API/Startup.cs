@@ -49,6 +49,13 @@ namespace API
             //To add swagger first add nuget Swashbuckle.ASPNetCore.SwaggerGen and Swashbuckle.ASPNetCore.SwaggerUI
             services.AddSwaggerDocumentation();
 
+            //Add cors policy
+            services.AddCors(option => {
+                option.AddPolicy("CorsPolicy", policy =>{
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
+
             
         }
 
@@ -62,11 +69,7 @@ namespace API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors(options =>{
-                options.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
             
