@@ -1,9 +1,7 @@
 
-using System;
 using API.Dtos;
 using AutoMapper;
 using Core.Entities;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace API.helper
 {
