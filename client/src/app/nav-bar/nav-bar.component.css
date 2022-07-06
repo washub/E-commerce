@@ -1,0 +1,13 @@
+.cart-no{
+    position: absolute;
+    top:-15px;
+    right: 35px;
+    min-width: 25px;
+    min-height: 25px;
+    background: #534da2;
+    text-align: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 1rem;
+    font-weight: 400;
+}
