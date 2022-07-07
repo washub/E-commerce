@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="row">
+
+        <section class="col-3 my-2">
+
+            <h5 class="text-danger ml-2">Sort</h5>
+            <select class="custom-select" (change)="onSort($event.target)">
+                <option [value]="''">Alphabetical</option>
+                <option [value]="'priceAsc'">Price Low to High</option>
+                <option [value]="'priceDesc'">Price High to Low</option>
+            </select>
+
+            <h5 class="text-danger mt-3 ml-2">Filters</h5>
+            <ul class="list-group">
+                <li class="list-group-item" 
+                *ngFor="let brand of brands"
+                [class.active] = "brand.id === shopParams.brandId"
+                [value] = 'brand.id'
+                (click) = 'onBrandSelected(brand.id)'
+                >
+                    {{brand.name}}
+                </li>
+              </ul>
+
+            <h5 class="text-danger mt-3 ml-2">Types</h5>
+            <ul class="list-group">
+                <li class="list-group-item"
+                 *ngFor="let type of types"
+                 [class.active] = 'type.id===shopParams.typeId'
+                 [value] = 'type.id'
+                 (click) = "onTypeSelected(type.id)"
+                 >
+                    {{type.name}}
+                </li>
+              </ul>
+
+        </section>
+
+        <section class="col-9 my-2">
+            <div class="d-flex justify-content-between align-items-center">
+
+                <app-paging-header
+                 [pageSize]="shopParams.pageSize"
+                 [pageNumber]="shopParams.pageNumber"
+                 [totalCount]="paging.count"
+                >
+                </app-paging-header>
+
+                <div class="form-inline my-2">
+                    <input (keyup.enter)="search(f.value)" class="form-control" style="width: 300px" type="text" placeholder="Search" #f >
+                    <button class="btn btn-outline-success ml-2" (click)="search(f.value)">Search</button>
+                    <button class="btn btn-outline-danger ml-2" (click)="reset(f)">Reset</button>
+                </div>
+            </div>
+            
+            <div class="row" >
+                <div class="col-4 mb-4" *ngFor="let product of products">
+                    <app-product-item [productItem] = "product"></app-product-item>
+                </div>
+                
+            </div>
+            <app-pager
+              [totalPages]="paging.totalPages"
+              [currentPage]="shopParams.pageNumber"
+              (pageChanged) = "getPage($event)"
+            ></app-pager>
+            
+        </section>
+    </div>
+</div>

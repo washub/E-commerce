@@ -1,0 +1,15 @@
+<div class="pagination center" *ngIf="totalPages!=0">
+
+    <a  *ngIf="currentPage!=1" 
+    (click)="onPageChanged(currentPage-1)">&lt;</a>
+
+    <a   (click)="onPageChanged(p)"
+    *ngFor="let p of counter(totalPages);"
+    [class.active] = 'p ===currentPage'
+    [class.disable] = 'p===currentPage'
+    >{{p}}</a>
+
+    <a 
+    *ngIf="currentPage!=totalPages" 
+    (click)="onPageChanged(currentPage+1)">&gt;</a>
+  </div>

@@ -1,0 +1,19 @@
+<header 
+    *ngIf="totalCount && totalCount>0; 
+    else notFoundHeader">
+    Showing 
+    <strong>
+        {{((pageNumber-1)*pageSize+1)}}-
+        {{(pageSize*pageNumber) < totalCount
+        ?pageSize*pageNumber
+        :totalCount}}
+    </strong> 
+    of 
+    <strong>
+        {{totalCount}}
+    </strong> 
+</header>
+
+<ng-template #notFoundHeader>
+    <strong>Sorry no data found</strong>
+</ng-template>
