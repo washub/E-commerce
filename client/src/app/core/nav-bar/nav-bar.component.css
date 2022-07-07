@@ -11,3 +11,13 @@
     font-size: 1rem;
     font-weight: 400;
 }
+a{
+    text-decoration: none;
+    color:#555151f7
+}
+a.active{
+    color:rgb(255, 124, 1)
+}
+.logo{
+    cursor: pointer;
+}
