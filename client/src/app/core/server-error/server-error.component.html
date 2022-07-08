@@ -1,0 +1,19 @@
+<div class="container mt-5">
+    <h3>Internal Server Error - refreshing the page will make the exception disappear</h3>
+    <ng-template *ngIf="error">
+        <h5 class="text-danger">Error => {{error.message}}</h5>
+    <p class="font-weight-bold">If you are seeing this then FrontEnd framework probably not responsible</p>
+    <p>what to do next?</p>
+    <ol>
+        <li>Open browser dev tool</li>
+        <li>inspect the network tab</li>
+        <li>check the failing request</li>
+        <li>Examine this request url - make sure this is correct</li>
+        <li>Reproduce the error in postman - if we see the same error then the issue is backend side</li>
+    </ol>
+    <p>Following is the stack trace - here you can find the more details of error</p>
+
+    <code class="mt-5" style="background-color:whitessmoke;">{{error.details}}</code>
+    </ng-template>
+    
+</div>
